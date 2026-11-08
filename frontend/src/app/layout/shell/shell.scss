@@ -1,26 +1,246 @@
+// Disposition générale : le menu à gauche, le contenu à droite
 .shell {
-  height: 100vh; // toute la hauteur de l'écran
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
 }
 
-.shell__nav {
-  width: 240px;
+// ===== Menu latéral : dégradé bleu → vert, bien séparé du contenu =====
+.menu {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 22px 14px;
+  box-sizing: border-box;
+  background: var(--fm-degrade-menu);
+  color: rgb(255 255 255 / 0.75);
+  overflow-y: auto;
 }
 
-.shell__brand {
+.marque {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 20px 16px;
-  font-size: 1.25rem;
+  gap: 10px;
+  padding: 0 8px 22px;
+}
+
+.marque__logo {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgb(255 255 255 / 0.15);
+  color: #fff;
+}
+
+.marque__nom {
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+// Salle en cours
+.salle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 18px;
+  padding: 10px 12px;
+  border: 1px solid rgb(255 255 255 / 0.15);
+  border-radius: 12px;
+  background: rgb(255 255 255 / 0.08);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    background: rgb(255 255 255 / 0.14);
+  }
+}
+
+.salle__textes {
+  display: flex;
+  flex-direction: column;
+}
+
+.salle__entreprise {
+  font-size: 0.75rem;
+}
+
+.salle__nom {
+  color: #fff;
   font-weight: 600;
 }
 
-.shell__toolbar {
-  position: sticky; // la barre reste en haut quand on fait défiler
-  top: 0;
-  z-index: 1;
+// Liens
+.navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
 }
 
-.shell__content {
-  padding: 24px;
+.navigation__titre {
+  margin: 16px 12px 6px;
+  font-size: 0.75rem;
+  color: rgb(255 255 255 / 0.5);
+}
+
+.navigation__lien {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: inherit;
+  text-decoration: none;
+  font-weight: 500;
+
+  &:hover {
+    background: rgb(255 255 255 / 0.08);
+    color: #fff;
+  }
+}
+
+// Le lien de la page ouverte : fond blanc, texte bleu
+.navigation__lien--actif,
+.navigation__lien--actif:hover {
+  background: #fff;
+  color: var(--fm-bleu);
+  font-weight: 600;
+}
+
+// Utilisateur connecté, en bas du menu
+.utilisateur {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 8px 0;
+  border-top: 1px solid rgb(255 255 255 / 0.15);
+}
+
+.utilisateur__textes {
+  display: flex;
+  flex-direction: column;
+}
+
+.utilisateur__nom {
+  color: #fff;
+  font-weight: 600;
+}
+
+.utilisateur__role {
+  font-size: 0.8rem;
+}
+
+// ===== Zone de contenu =====
+.contenu {
+  min-width: 0; // évite que le contenu déborde
+}
+
+.barre {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 32px;
+  background: var(--fm-surface);
+  border-bottom: 1px solid var(--fm-trait);
+}
+
+.barre__menu {
+  display: none; // visible seulement sur petit écran
+}
+
+.recherche {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  max-width: 440px;
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid var(--fm-trait);
+  border-radius: 12px;
+  background: var(--fm-fond);
+  color: var(--fm-gris);
+
+  &:focus-within {
+    border-color: var(--fm-bleu);
+    background: var(--fm-surface);
+  }
+
+  input {
+    flex: 1;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font: inherit;
+    color: var(--fm-encre);
+  }
+}
+
+.barre__action {
+  margin-left: auto;
+}
+
+.page {
+  padding: 28px 32px 48px;
+}
+
+// ===== Petits écrans : le menu se cache et s'ouvre avec le bouton ☰ =====
+@media (max-width: 900px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+
+  .menu {
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    width: 272px;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+  }
+
+  .menu--ouvert {
+    transform: translateX(0);
+  }
+
+  .voile {
+    position: fixed;
+    inset: 0;
+    z-index: 9;
+    border: 0;
+    background: rgb(0 0 0 / 0.4);
+  }
+
+  .barre {
+    padding: 12px 16px;
+  }
+
+  .barre__menu {
+    display: inline-flex;
+  }
+
+  .barre__action {
+    display: none;
+  }
+
+  .page {
+    padding: 20px 16px 40px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu {
+    transition: none;
+  }
 }

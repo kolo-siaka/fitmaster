@@ -1,27 +1,67 @@
-<mat-sidenav-container class="shell">
-  <!-- Menu latéral -->
-  <mat-sidenav mode="side" opened class="shell__nav">
-    <div class="shell__brand">
-      <mat-icon>fitness_center</mat-icon>
-      <span>FitMaster</span>
+<div class="shell">
+  <!-- ===== Menu latéral ===== -->
+  <aside class="menu" [class.menu--ouvert]="menuOuvert()">
+    <div class="marque">
+      <span class="marque__logo"><mat-icon>fitness_center</mat-icon></span>
+      <span class="marque__nom">FitMaster</span>
     </div>
 
-    <mat-nav-list>
-      @for (item of navItems; track item.path) {
-        <a mat-list-item [routerLink]="item.path"
-           routerLinkActive #rla="routerLinkActive" [activated]="rla.isActive">
-          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
-          <span matListItemTitle>{{ item.label }}</span>
-        </a>
-      }
-    </mat-nav-list>
-  </mat-sidenav>
+    <!-- Salle en cours (plus tard : choix parmi les salles de l'entreprise) -->
+    <button class="salle" type="button">
+      <span class="salle__textes">
+        <span class="salle__entreprise">Gym Plus Abidjan</span>
+        <span class="salle__nom">Salle de Cocody</span>
+      </span>
+      <mat-icon>unfold_more</mat-icon>
+    </button>
 
-  <!-- Contenu principal -->
-  <mat-sidenav-content>
-    <mat-toolbar class="shell__toolbar">Gestion de la salle de sport</mat-toolbar>
-    <main class="shell__content">
+    <nav class="navigation">
+      @for (groupe of groupes; track groupe.titre) {
+        <p class="navigation__titre">{{ groupe.titre }}</p>
+        @for (lien of groupe.liens; track lien.path) {
+          <a class="navigation__lien" [routerLink]="lien.path" routerLinkActive="navigation__lien--actif"
+             (click)="menuOuvert.set(false)">
+            <mat-icon>{{ lien.icon }}</mat-icon>
+            <span>{{ lien.label }}</span>
+          </a>
+        }
+      }
+    </nav>
+
+    <div class="utilisateur">
+      <app-avatar nom="Aminata Konaté" [taille]="36" />
+      <span class="utilisateur__textes">
+        <span class="utilisateur__nom">Aminata Konaté</span>
+        <span class="utilisateur__role">Gestionnaire</span>
+      </span>
+    </div>
+  </aside>
+
+  <!-- Voile sombre derrière le menu ouvert sur mobile -->
+  @if (menuOuvert()) {
+    <button type="button" class="voile" aria-label="Fermer le menu" (click)="menuOuvert.set(false)"></button>
+  }
+
+  <!-- ===== Zone de contenu ===== -->
+  <div class="contenu">
+    <header class="barre">
+      <button mat-icon-button class="barre__menu" (click)="menuOuvert.set(true)" aria-label="Ouvrir le menu">
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <label class="recherche">
+        <mat-icon>search</mat-icon>
+        <input type="search" placeholder="Rechercher un membre par nom ou téléphone" />
+      </label>
+
+      <button mat-flat-button class="barre__action bouton-degrade">
+        <mat-icon>person_add</mat-icon>
+        Inscrire un membre
+      </button>
+    </header>
+
+    <main class="page">
       <router-outlet />
     </main>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+  </div>
+</div>

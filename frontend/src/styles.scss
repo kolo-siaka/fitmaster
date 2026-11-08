@@ -66,8 +66,8 @@ body {
 }
 
 // Bouton avec le dégradé bleu → vert (à ajouter sur un bouton mat-flat-button)
-.bouton-degrade {
-  background-image: var(--fm-degrade);
+.mat-mdc-button-base.bouton-degrade {
+  background: var(--fm-degrade);
 }
 
 // Icônes un peu plus fines
