@@ -1,28 +1,29 @@
-import { DecimalPipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
-import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { RenouvellementsCard } from '../renouvellements-card/renouvellements-card';
 
 interface Indicateur {
   libelle: string;
-  valeur: number;
+  valeur: string;
+  detail: string;
   icone: string;
-  unite?: string;
 }
 
 @Component({
   selector: 'app-dashboard-page',
-  imports: [DecimalPipe, MatCardModule, MatIconModule, RenouvellementsCard],
+  imports: [DatePipe, MatIconModule, RenouvellementsCard],
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.scss',
 })
 export class DashboardPage {
+  protected readonly aujourdhui = new Date();
+
   // Chiffres fictifs en attendant le backend
   protected readonly indicateurs: Indicateur[] = [
-    { libelle: 'Membres actifs', valeur: 128, icone: 'groups' },
-    { libelle: "Entrées aujourd'hui", valeur: 46, icone: 'login' },
-    { libelle: 'Recette du jour', valeur: 185000, icone: 'payments', unite: 'FCFA' },
-    { libelle: 'Ventes de produits', valeur: 23, icone: 'shopping_bag' },
+    { libelle: 'Membres actifs', valeur: '128', detail: '+9 ce mois-ci', icone: 'groups' },
+    { libelle: "Entrées aujourd'hui", valeur: '46', detail: 'Pic entre 18 h et 20 h', icone: 'login' },
+    { libelle: 'Recette du jour', valeur: '185 000 FCFA', detail: 'Caisse ouverte à 7 h 02', icone: 'payments' },
+    { libelle: 'Produits vendus', valeur: '23', detail: 'Surtout eau et créatine', icone: 'shopping_bag' },
   ];
 }

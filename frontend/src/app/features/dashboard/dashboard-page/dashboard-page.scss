@@ -1,34 +1,107 @@
-h1 {
-  margin: 0 0 24px;
-}
-
-.indicateurs {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); // s'adapte à la largeur
-  gap: 16px;
+.entete {
   margin-bottom: 24px;
-}
 
-.indicateur {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 16px;
-  padding: 20px;
-
-  mat-icon {
-    font-size: 32px;
-    width: 32px;
-    height: 32px;
-    color: #1e40af;
+  h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
   }
 }
 
-.valeur {
-  font-size: 1.5rem;
-  font-weight: 600;
+.date {
+  margin: 4px 0 0;
+  color: var(--fm-gris);
+
+  &::first-letter {
+    text-transform: uppercase; // « dimanche » → « Dimanche »
+  }
 }
 
-.libelle {
-  color: #666;
+// Les 4 chiffres dans un seul panneau blanc, séparés par des traits fins
+.chiffres {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin-bottom: 36px;
+  border: 1px solid var(--fm-trait);
+  border-radius: var(--fm-rayon);
+  background: var(--fm-surface);
+}
+
+.chiffre {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px;
+
+  & + & {
+    border-left: 1px solid var(--fm-trait);
+  }
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+}
+
+// Petite icône blanche sur le dégradé de la marque
+.chiffre__icone {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--fm-degrade);
+  color: #fff;
+
+  mat-icon {
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+  }
+}
+
+.chiffre__libelle {
+  color: var(--fm-gris);
+  font-size: 0.85rem;
+}
+
+.chiffre__valeur {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.chiffre__detail {
+  color: var(--fm-gris);
+  font-size: 0.8rem;
+}
+
+// Tablette : 2 colonnes
+@media (max-width: 1100px) {
+  .chiffres {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .chiffre:nth-child(3) {
+    border-left: 0;
+  }
+
+  .chiffre:nth-child(n + 3) {
+    border-top: 1px solid var(--fm-trait);
+  }
+}
+
+// Téléphone : 1 colonne
+@media (max-width: 560px) {
+  .chiffres {
+    grid-template-columns: 1fr;
+  }
+
+  .chiffre + .chiffre {
+    border-left: 0;
+    border-top: 1px solid var(--fm-trait);
+  }
 }

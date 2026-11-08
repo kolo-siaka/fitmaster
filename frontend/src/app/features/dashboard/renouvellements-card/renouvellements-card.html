@@ -1,22 +1,23 @@
 <section>
-  <div class="entete">
-    <h2>Abonnements à relancer</h2>
-    <span class="compteur">{{ compteurs().tous }} à relancer</span>
-    <span class="total-reste">Total restant dû : {{ totalReste() | number }} FCFA</span>
-  </div>
-
-  <mat-button-toggle-group [value]="filtre()" (change)="filtre.set($event.value)" hideSingleSelectionIndicator>
-    <mat-button-toggle value="tous">Tous ({{ compteurs().tous }})</mat-button-toggle>
-    <mat-button-toggle value="bientot">Bientôt à échéance ({{ compteurs().bientot }})</mat-button-toggle>
-    <mat-button-toggle value="expire">Expirés ({{ compteurs().expire }})</mat-button-toggle>
-    <mat-button-toggle value="reste">Reste à payer ({{ compteurs().reste }})</mat-button-toggle>
-  </mat-button-toggle-group>
+  <header class="entete">
+    <div>
+      <h2>Arrivent à échéance</h2>
+      <p class="resume">
+        {{ echeances().length }} abonnement{{ echeances().length > 1 ? 's' : '' }}
+        se termine{{ echeances().length > 1 ? 'nt' : '' }} dans les {{ seuil }} prochains jours
+      </p>
+    </div>
+    <a mat-button routerLink="/abonnements">
+      Voir tous les abonnements
+      <mat-icon iconPositionEnd>chevron_right</mat-icon>
+    </a>
+  </header>
 
   <div class="grille">
-    @for (a of liste(); track a.id) {
+    @for (a of echeances(); track a.id) {
       <app-relance-card [abonnement]="a" />
     } @empty {
-      <p class="vide">Aucun membre à relancer. 👍</p>
+      <p class="vide">Aucun abonnement ne se termine dans les {{ seuil }} prochains jours.</p>
     }
   </div>
 </section>

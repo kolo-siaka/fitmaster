@@ -1,15 +1,20 @@
-<h1>Tableau de bord</h1>
+<header class="entete">
+  <h1>Tableau de bord</h1>
+  <p class="date">{{ aujourdhui | date: 'EEEE d MMMM y' }}</p>
+</header>
 
-<div class="indicateurs">
+<!-- Les chiffres du jour -->
+<section class="chiffres" aria-label="Chiffres du jour">
   @for (ind of indicateurs; track ind.libelle) {
-    <mat-card appearance="outlined" class="indicateur">
-      <mat-icon>{{ ind.icone }}</mat-icon>
+    <div class="chiffre">
+      <span class="chiffre__icone"><mat-icon>{{ ind.icone }}</mat-icon></span>
       <div>
-        <div class="valeur">{{ ind.valeur | number }} {{ ind.unite }}</div>
-        <div class="libelle">{{ ind.libelle }}</div>
+        <span class="chiffre__libelle">{{ ind.libelle }}</span>
+        <span class="chiffre__valeur">{{ ind.valeur }}</span>
+        <span class="chiffre__detail">{{ ind.detail }}</span>
       </div>
-    </mat-card>
+    </div>
   }
-</div>
+</section>
 
 <app-renouvellements-card />

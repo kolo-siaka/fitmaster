@@ -1,60 +1,57 @@
 @let a = abonnement();
 
-<mat-card appearance="outlined" class="carte">
-  <!-- En-tête : photo, nom, formule -->
-  <div class="entete">
-    <app-avatar [nom]="a.membre.nom + ' ' + a.membre.prenoms" [photoUrl]="a.membre.photoUrl" [taille]="56" />
+<article class="carte">
+  <!-- Qui : photo, nom, formule -->
+  <header class="entete">
+    <app-avatar [nom]="a.membre.nom + ' ' + a.membre.prenoms" [photoUrl]="a.membre.photoUrl" [taille]="46" />
     <div class="identite">
-      <strong>{{ a.membre.nom }} {{ a.membre.prenoms }}</strong>
-      <span class="secondaire">{{ a.formule }} · {{ a.membre.salle }}</span>
+      <h3>{{ a.membre.prenoms }} {{ a.membre.nom }}</h3>
+      <span>{{ a.formule }}, {{ a.membre.salle }}</span>
     </div>
-  </div>
+  </header>
 
-  <!-- Échéance -->
-  <div class="ligne">
-    <span class="secondaire">Échéance : {{ a.dateFin | date: 'dd/MM/yyyy' }}</span>
-    @if (a.echeance !== 'active') {
-      <span class="badge" [class.badge--rouge]="a.echeance === 'expire'">{{ libelleEcheance() }}</span>
-    }
-  </div>
+  <!-- Quand : l'échéance -->
+  <p class="etat" [class.etat--urgent]="a.joursRestants <= 1">
+    <mat-icon>schedule</mat-icon>
+    {{ etat() }}
+    <span class="etat__date">{{ a.dateFin | date: 'EEE d MMM' }}</span>
+  </p>
 
-  <!-- Paiement -->
+  <!-- Combien : le paiement -->
   <div class="paiement">
-    <div class="ligne">
-      <span>Payé : <strong>{{ a.montantPaye | number }}</strong> / {{ a.montantTotal | number }} FCFA</span>
-      <span class="secondaire">{{ a.pourcentagePaye }} %</span>
+    <div class="montants">
+      <span class="montants__paye">{{ a.montantPaye | number }} FCFA</span>
+      <span class="montants__total">payés sur {{ a.montantTotal | number }}</span>
     </div>
 
-    <div class="barre">
-      <div
-        class="barre__remplissage"
-        [style.width.%]="a.pourcentagePaye"
-        [class.barre__remplissage--complet]="a.resteAPayer === 0"
-        [class.barre__remplissage--retard]="a.soldeEnRetard"
-      ></div>
+    <div class="barre" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+         [attr.aria-valuenow]="a.pourcentagePaye" [attr.aria-label]="'Payé à ' + a.pourcentagePaye + ' %'">
+      <div class="barre__remplissage" [class.barre__remplissage--retard]="a.soldeEnRetard"
+           [style.width.%]="a.pourcentagePaye"></div>
     </div>
 
-    @if (a.resteAPayer > 0) {
-      <div class="reste" [class.reste--retard]="a.soldeEnRetard">
-        Reste <strong>{{ a.resteAPayer | number }} FCFA</strong>
-        {{ a.soldeEnRetard ? '· en retard depuis le' : 'à payer avant le' }}
-        {{ a.dateLimiteSolde | date: 'dd/MM/yyyy' }}
-      </div>
+    @if (a.resteAPayer === 0) {
+      <p class="reste reste--ok"><mat-icon>check_circle</mat-icon> Payé en totalité</p>
+    } @else if (a.soldeEnRetard) {
+      <p class="reste reste--retard">
+        Reste {{ a.resteAPayer | number }} FCFA, en retard depuis le {{ a.dateLimiteSolde | date: 'd MMMM' }}
+      </p>
     } @else {
-      <div class="reste reste--ok">Abonnement entièrement payé ✔</div>
+      <p class="reste">Reste {{ a.resteAPayer | number }} FCFA, avant le {{ a.dateLimiteSolde | date: 'd MMMM' }}</p>
     }
   </div>
 
   <!-- Actions -->
-  <div class="actions">
-    <a mat-stroked-button class="whatsapp" [href]="lienWhatsApp()" target="_blank">
-      <mat-icon>chat</mat-icon> Relancer
+  <footer class="actions">
+    <a mat-button [href]="lienWhatsApp()" target="_blank">
+      <mat-icon>chat</mat-icon>
+      Relancer
     </a>
-    <a mat-icon-button [href]="'tel:+' + a.membre.telephone" matTooltip="Appeler">
+    <a mat-icon-button [href]="'tel:+' + a.membre.telephone" matTooltip="Appeler" aria-label="Appeler">
       <mat-icon>call</mat-icon>
     </a>
-    <button mat-flat-button>
-      {{ a.resteAPayer > 0 ? 'Encaisser le solde' : 'Renouveler' }}
+    <button mat-stroked-button class="actions__principale">
+      {{ a.resteAPayer > 0 ? 'Encaisser' : 'Renouveler' }}
     </button>
-  </div>
-</mat-card>
+  </footer>
+</article>

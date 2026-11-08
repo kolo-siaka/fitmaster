@@ -1,45 +1,37 @@
 .entete {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
+  justify-content: space-between;
   flex-wrap: wrap;
   gap: 12px;
   margin-bottom: 16px;
 
   h2 {
     margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
   }
 }
 
-.compteur {
-  padding: 4px 12px;
-  border-radius: 999px;
-  background: #fee2e2;
-  color: #b91c1c;
-  font-weight: 600;
-  font-size: 0.85rem;
+.resume {
+  margin: 2px 0 0;
+  color: var(--fm-gris);
 }
 
-.total-reste {
-  margin-left: auto;
-  font-weight: 600;
-  color: #92400e;
-}
-
-mat-button-toggle-group {
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-}
-
-// Grille de cartes : autant de colonnes que la largeur le permet (280 px minimum chacune)
+// Grille de cartes qui s'adapte à la largeur de l'écran (290 px minimum par carte)
 .grille {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
   gap: 16px;
 }
 
 .vide {
   grid-column: 1 / -1;
-  padding: 24px;
+  margin: 0;
+  padding: 40px;
+  border: 1px dashed var(--fm-trait);
+  border-radius: var(--fm-rayon);
+  background: var(--fm-surface);
+  color: var(--fm-gris);
   text-align: center;
-  color: #666;
 }

@@ -15,18 +15,14 @@ export class AbonnementService {
   // Abonnements fictifs en attendant le backend
   private readonly abonnements = signal<Abonnement[]>(creerAbonnementsFictifs());
 
-  // Membres à relancer : échéance proche, expiré récemment, ou reste à payer
-  readonly aRelancer = computed<AbonnementARelancer[]>(() => {
+  // Abonnements qui arrivent à échéance (dans 7 jours ou moins), le plus urgent en premier.
+  // Les expirés et les restes à payer seront affichés dans la page « Abonnements ».
+  readonly echeancesProches = computed<AbonnementARelancer[]>(() => {
     const p = this.parametres();
 
     return this.abonnements()
       .map((a) => this.enrichir(a, p))
-      .filter(
-        (a) =>
-          a.echeance === 'bientot' ||
-          (a.echeance === 'expire' && a.joursRestants >= -p.periodeExpiresJours) ||
-          a.resteAPayer > 0,
-      )
+      .filter((a) => a.echeance === 'bientot')
       .sort((a, b) => a.joursRestants - b.joursRestants);
   });
 
@@ -84,6 +80,8 @@ function creerAbonnementsFictifs(): Abonnement[] {
     ['Koné', 'Awa', 'Mensuel', 2, 30, 15000, 7500], // bientôt + solde en retard
     ['Traoré', 'Ibrahim', 'Trimestriel', 5, 90, 40000, 40000], // bientôt, tout payé
     ['Kouassi', 'Ange', 'Mensuel', 0, 30, 15000, 15000], // expire aujourd'hui
+    ['Kouassi', 'Ange', 'Mensuel', 0, 30, 15000, 15000], // expire aujourd'hui
+    ['Sanogo', 'Aïcha', 'Mensuel', 3, 30, 15000, 15000], // expire dans 3 jours
     ['Ouattara', 'Karim', 'Mensuel', 25, 30, 15000, 7500], // vient de s'inscrire, solde à payer
     ['Bamba', 'Fatou', 'Annuel', 200, 365, 150000, 150000], // rien à signaler
     ['Yao', 'Marc', 'Mensuel', -6, 30, 15000, 15000], // expiré
