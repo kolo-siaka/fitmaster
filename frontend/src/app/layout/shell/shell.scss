@@ -1,0 +1,26 @@
+.shell {
+  height: 100vh; // toute la hauteur de l'écran
+}
+
+.shell__nav {
+  width: 240px;
+}
+
+.shell__brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 16px;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.shell__toolbar {
+  position: sticky; // la barre reste en haut quand on fait défiler
+  top: 0;
+  z-index: 1;
+}
+
+.shell__content {
+  padding: 24px;
+}
