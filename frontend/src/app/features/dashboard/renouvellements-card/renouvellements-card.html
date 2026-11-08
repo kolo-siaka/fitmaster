@@ -1,0 +1,22 @@
+<section>
+  <div class="entete">
+    <h2>Abonnements à relancer</h2>
+    <span class="compteur">{{ compteurs().tous }} à relancer</span>
+    <span class="total-reste">Total restant dû : {{ totalReste() | number }} FCFA</span>
+  </div>
+
+  <mat-button-toggle-group [value]="filtre()" (change)="filtre.set($event.value)" hideSingleSelectionIndicator>
+    <mat-button-toggle value="tous">Tous ({{ compteurs().tous }})</mat-button-toggle>
+    <mat-button-toggle value="bientot">Bientôt à échéance ({{ compteurs().bientot }})</mat-button-toggle>
+    <mat-button-toggle value="expire">Expirés ({{ compteurs().expire }})</mat-button-toggle>
+    <mat-button-toggle value="reste">Reste à payer ({{ compteurs().reste }})</mat-button-toggle>
+  </mat-button-toggle-group>
+
+  <div class="grille">
+    @for (a of liste(); track a.id) {
+      <app-relance-card [abonnement]="a" />
+    } @empty {
+      <p class="vide">Aucun membre à relancer. 👍</p>
+    }
+  </div>
+</section>

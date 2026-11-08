@@ -1,39 +1,82 @@
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
+
+// Police et icônes installées dans le projet (elles marchent même sans internet)
+@use '@fontsource-variable/manrope';
+@use 'material-symbols/outlined';
+
+// ---------- Palette FitMaster : bleu → vert ----------
+:root {
+  --fm-fond: #f3f6f9; // fond de la zone de contenu
+  --fm-surface: #ffffff; // cartes, panneaux
+  --fm-encre: #0f1c2e; // texte principal
+  --fm-gris: #5d6b7e; // texte secondaire
+  --fm-trait: #e1e7ee; // bordures et séparateurs
+
+  --fm-bleu: #1f5fd1; // couleur principale
+  --fm-vert: #0f9d74; // couleur secondaire
+  --fm-bleu-doux: #e8f0fc; // bleu très clair (survol, avatar)
+  --fm-degrade: linear-gradient(135deg, #1f5fd1 0%, #0f9d74 100%); // le dégradé de la marque
+  --fm-degrade-menu: linear-gradient(170deg, #12306b 0%, #0d4a6b 55%, #0a5e4c 100%); // plus foncé, pour le menu
+
+  --fm-alerte: #b4741a; // ambre : échéance proche
+  --fm-danger: #c0392b; // rouge : en retard
+
+  --fm-rayon: 14px; // arrondi des cartes
+  --fm-police: 'Manrope Variable', system-ui, sans-serif;
+}
 
 html {
   height: 100%;
   @include mat.theme(
     (
       color: (
-        primary: mat.$azure-palette,
-        tertiary: mat.$blue-palette,
+        primary: mat.$blue-palette,
+        theme-type: light,
       ),
-      typography: Roboto,
+      typography: var(--fm-police),
       density: 0,
+    )
+  );
+
+  // Boutons Material aux couleurs de FitMaster
+  @include mat.button-overrides(
+    (
+      filled-container-color: var(--fm-bleu),
+      filled-label-text-color: #fff,
+      filled-container-shape: 10px,
+      outlined-container-shape: 10px,
+      outlined-label-text-color: var(--fm-encre),
+      outlined-outline-color: var(--fm-trait),
+      text-container-shape: 10px,
+      text-label-text-color: var(--fm-bleu),
     )
   );
 }
 
 body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
-  color-scheme: light;
-
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
-
-  // Reset the user agent margin.
   margin: 0;
   height: 100%;
+  background: var(--fm-fond);
+  color: var(--fm-encre);
+  font-family: var(--fm-police);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  font-variant-numeric: tabular-nums; // chiffres de même largeur : les montants s'alignent
 }
-/* You can add global styles to this file, and also import other style files */
+
+// Bouton avec le dégradé bleu → vert (à ajouter sur un bouton mat-flat-button)
+.bouton-degrade {
+  background-image: var(--fm-degrade);
+}
+
+// Icônes un peu plus fines
+.material-symbols-outlined {
+  font-variation-settings: 'wght' 350;
+}
+
+// Contour visible quand on navigue au clavier (accessibilité)
+:focus-visible {
+  outline: 2px solid var(--fm-bleu);
+  outline-offset: 2px;
+}

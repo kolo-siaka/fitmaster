@@ -1,0 +1,106 @@
+.carte {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.entete {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.identite {
+  display: flex;
+  flex-direction: column;
+}
+
+.ligne {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.secondaire {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+// Badge d'échéance
+.badge {
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: #ffedd5; // orange = bientôt
+  color: #c2410c;
+}
+
+.badge--rouge {
+  background: #fee2e2; // rouge = expiré
+  color: #b91c1c;
+}
+
+// Bloc paiement
+.paiement {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+// Barre de progression faite à la main : un fond gris + un remplissage coloré
+.barre {
+  height: 10px;
+  border-radius: 999px;
+  background: #e5e7eb;
+  overflow: hidden;
+}
+
+.barre__remplissage {
+  height: 100%;
+  border-radius: 999px;
+  background: #f59e0b; // orange : paiement partiel
+  transition: width 0.4s ease;
+}
+
+.barre__remplissage--complet {
+  background: #16a34a; // vert : tout est payé
+}
+
+.barre__remplissage--retard {
+  background: #dc2626; // rouge : le délai est dépassé
+}
+
+.reste {
+  font-size: 0.85rem;
+  color: #92400e;
+}
+
+.reste--retard {
+  color: #b91c1c;
+}
+
+.reste--ok {
+  color: #15803d;
+}
+
+// Actions en bas de la carte
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto; // pousse les boutons tout en bas
+  padding-top: 4px;
+
+  button {
+    margin-left: auto;
+  }
+}
+
+.whatsapp {
+  color: #15803d;
+}

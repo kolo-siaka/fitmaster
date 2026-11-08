@@ -1,1 +1,15 @@
-<p>dashboard-page works!</p>
+<h1>Tableau de bord</h1>
+
+<div class="indicateurs">
+  @for (ind of indicateurs; track ind.libelle) {
+    <mat-card appearance="outlined" class="indicateur">
+      <mat-icon>{{ ind.icone }}</mat-icon>
+      <div>
+        <div class="valeur">{{ ind.valeur | number }} {{ ind.unite }}</div>
+        <div class="libelle">{{ ind.libelle }}</div>
+      </div>
+    </mat-card>
+  }
+</div>
+
+<app-renouvellements-card />
