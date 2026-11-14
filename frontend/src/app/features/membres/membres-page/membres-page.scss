@@ -129,9 +129,6 @@ td {
   vertical-align: middle;
 }
 
-tbody tr:last-child td {
-  border-bottom: 0;
-}
 
 tbody tr:hover td {
   background: #f8fafc; // la ligne survolée s'éclaircit
@@ -243,4 +240,9 @@ tbody tr:hover td {
   .masquable {
     display: none;
   }
+}
+// La pagination, séparée du tableau par un trait
+app-pagination {
+  display: block;
+  border-top: 1px solid var(--fm-trait);
 }

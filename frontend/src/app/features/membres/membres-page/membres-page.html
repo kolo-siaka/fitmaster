@@ -3,7 +3,7 @@
   <p class="resume">{{ filtres()[0].nombre }} membres inscrits</p>
 </header>
 
-<!-- Recherche + filtres -->
+<!-- Recherche + période + filtres -->
 <div class="outils">
   <label class="recherche">
     <mat-icon>search</mat-icon>
@@ -14,6 +14,8 @@
       (input)="surRecherche($event)"
     />
   </label>
+
+  <app-filtre-periode libelle="Inscrits" [(periode)]="periode" />
 
   <div class="filtres" role="group" aria-label="Filtrer par statut d'abonnement">
     @for (f of filtres(); track f.valeur) {
@@ -37,13 +39,14 @@
       <tr>
         <th>Membre</th>
         <th class="masquable">Téléphone</th>
+        <th class="masquable">Inscription</th>
         <th>Abonnement</th>
         <th class="masquable">Paiement</th>
         <th><span class="invisible">Ouvrir</span></th>
       </tr>
     </thead>
     <tbody>
-      @for (l of lignesAffichees(); track l.membre.id) {
+      @for (l of lignesDeLaPage(); track l.membre.id) {
         <tr>
           <!-- Membre -->
           <td>
@@ -58,6 +61,9 @@
 
           <!-- Téléphone -->
           <td class="masquable">{{ l.membre.telephone | telephone }}</td>
+
+          <!-- Date d'inscription -->
+          <td class="masquable">{{ l.membre.dateInscription | date: 'd MMM y' }}</td>
 
           <!-- Abonnement : formule + statut -->
           <td>
@@ -97,18 +103,20 @@
             }
           </td>
 
-          <!-- Ouvrir la fiche (étape 11.3) -->
+          <!-- Ouvrir la fiche (étape 11.4) -->
           <td class="fleche">
             <mat-icon>chevron_right</mat-icon>
           </td>
         </tr>
       } @empty {
         <tr>
-          <td colspan="5" class="vide">
-            Aucun membre ne correspond à « {{ recherche() }} ». Vérifiez l'orthographe ou essayez le numéro de téléphone.
+          <td colspan="6" class="vide">
+            Aucun membre ne correspond à votre recherche. Vérifiez l'orthographe, ou élargissez le filtre ou la période.
           </td>
         </tr>
       }
     </tbody>
   </table>
+
+  <app-pagination [total]="lignesFiltrees().length" [(page)]="page" [(taillePage)]="taillePage" />
 </div>

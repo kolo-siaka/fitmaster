@@ -1,0 +1,39 @@
+.filtre-periode {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+// Les deux types de champs ont le même look que la recherche
+.choix,
+.date {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--fm-trait);
+  border-radius: 12px;
+  background: var(--fm-surface);
+  color: var(--fm-gris);
+
+  &:focus-within {
+    border-color: var(--fm-bleu);
+  }
+}
+
+.choix__libelle {
+  font-size: 0.85rem;
+}
+
+select,
+input {
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--fm-encre);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}

@@ -1,11 +1,17 @@
 import { DatePipe } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, linkedSignal, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { AbonnementARelancer } from '../../../core/models/abonnement.model';
 import { Membre } from '../../../core/models/membre.model';
 import { AbonnementService } from '../../../core/services/abonnement.service';
 import { MembreService } from '../../../core/services/membre.service';
 import { Avatar } from '../../../shared/components/avatar/avatar';
+import {
+  estDansPeriode,
+  FiltrePeriode,
+  Periode,
+} from '../../../shared/components/filtre-periode/filtre-periode';
+import { Pagination } from '../../../shared/components/pagination/pagination';
 import { TelephonePipe } from '../../../shared/pipes/telephone-pipe';
 
 type Statut = 'actif' | 'bientot' | 'expire' | 'sans';
@@ -20,7 +26,7 @@ interface LigneMembre {
 
 @Component({
   selector: 'app-membres-page',
-  imports: [DatePipe, MatIconModule, Avatar, TelephonePipe],
+  imports: [DatePipe, MatIconModule, Avatar, TelephonePipe, FiltrePeriode, Pagination],
   templateUrl: './membres-page.html',
   styleUrl: './membres-page.scss',
 })
@@ -28,9 +34,17 @@ export class MembresPage {
   private readonly membreService = inject(MembreService);
   private readonly abonnementService = inject(AbonnementService);
 
-  // Ce que l'utilisateur tape dans la recherche, et le filtre choisi
+  // Ce que l'utilisateur tape dans la recherche, le filtre et la période choisis
   protected readonly recherche = signal('');
   protected readonly filtre = signal<Filtre>('tous');
+  protected readonly periode = signal<Periode>({ du: null, au: null });
+
+  // Pagination : la page revient automatiquement à 1 quand la recherche, le filtre ou la période change
+  protected readonly taillePage = signal(10);
+  protected readonly page = linkedSignal({
+    source: () => [this.recherche(), this.filtre(), this.periode()],
+    computation: () => 1,
+  });
 
   // Toutes les lignes, triées par nom
   private readonly lignes = computed<LigneMembre[]>(() => {
@@ -55,10 +69,11 @@ export class MembresPage {
       .sort((a, b) => a.membre.nom.localeCompare(b.membre.nom, 'fr'));
   });
 
-  // Les lignes qui correspondent à la recherche ET au filtre
-  protected readonly lignesAffichees = computed(() => {
+  // Les lignes qui correspondent à la recherche, au filtre ET à la période d'inscription
+  protected readonly lignesFiltrees = computed(() => {
     const texte = normaliser(this.recherche());
     const filtre = this.filtre();
+    const periode = this.periode();
 
     return this.lignes().filter((l) => {
       const m = l.membre;
@@ -68,8 +83,15 @@ export class MembresPage {
           texte,
         );
       const correspondFiltre = filtre === 'tous' || l.statut === filtre;
-      return correspondRecherche && correspondFiltre;
+      const correspondPeriode = estDansPeriode(m.dateInscription, periode);
+      return correspondRecherche && correspondFiltre && correspondPeriode;
     });
+  });
+
+  // Seulement les lignes de la page affichée
+  protected readonly lignesDeLaPage = computed(() => {
+    const debut = (this.page() - 1) * this.taillePage();
+    return this.lignesFiltrees().slice(debut, debut + this.taillePage());
   });
 
   // Les filtres proposés, avec le nombre de membres dans chacun

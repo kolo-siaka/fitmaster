@@ -1,0 +1,22 @@
+<div class="filtre-periode">
+  <label class="choix">
+    <mat-icon>calendar_month</mat-icon>
+    <span class="choix__libelle">{{ libelle() }}</span>
+    <select [value]="raccourci()" (change)="choisirRaccourci($event)">
+      @for (r of raccourcis; track r.valeur) {
+        <option [value]="r.valeur">{{ r.texte }}</option>
+      }
+    </select>
+  </label>
+
+  @if (raccourci() === 'perso') {
+    <label class="date">
+      Du
+      <input type="date" [value]="periode().du ?? ''" [max]="periode().au ?? ''" (change)="changerDu($event)" />
+    </label>
+    <label class="date">
+      au
+      <input type="date" [value]="periode().au ?? ''" [min]="periode().du ?? ''" (change)="changerAu($event)" />
+    </label>
+  }
+</div>

@@ -1,0 +1,76 @@
+.pagination {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  padding: 12px 16px;
+  color: var(--fm-gris);
+  font-size: 0.85rem;
+}
+
+.taille {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  select {
+    height: 32px;
+    padding: 0 8px;
+    border: 1px solid var(--fm-trait);
+    border-radius: 8px;
+    background: var(--fm-surface);
+    color: var(--fm-encre);
+    font: inherit;
+  }
+}
+
+.position {
+  margin-left: auto;
+}
+
+.pages {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.page {
+  display: grid;
+  place-items: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 6px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--fm-encre);
+  font: inherit;
+  cursor: pointer;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover:not(:disabled) {
+    border-color: var(--fm-trait);
+    background: var(--fm-fond);
+  }
+
+  &:disabled {
+    color: var(--fm-trait);
+    cursor: default;
+  }
+}
+
+.page--active,
+.page--active:hover:not(:disabled) {
+  background: var(--fm-degrade);
+  color: #fff;
+  font-weight: 600;
+}
+
+.points {
+  padding: 0 4px;
+}

@@ -1,0 +1,39 @@
+<div class="pagination">
+  <label class="taille">
+    Afficher
+    <select [value]="taillePage()" (change)="changerTaille($event)">
+      @for (t of taillesPossibles(); track t) {
+        <option [value]="t">{{ t }}</option>
+      }
+    </select>
+    par page
+  </label>
+
+  <span class="position">{{ debut() }}–{{ fin() }} sur {{ total() }}</span>
+
+  <nav class="pages" aria-label="Pages">
+    <button type="button" class="page" [disabled]="page() === 1" (click)="allerA(page() - 1)" aria-label="Page précédente">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+
+    @for (b of boutons(); track $index) {
+      @if (b === '…') {
+        <span class="points">…</span>
+      } @else {
+        <button
+          type="button"
+          class="page"
+          [class.page--active]="b === page()"
+          [attr.aria-current]="b === page() ? 'page' : null"
+          (click)="allerA(b)"
+        >
+          {{ b }}
+        </button>
+      }
+    }
+
+    <button type="button" class="page" [disabled]="page() === nombrePages()" (click)="allerA(page() + 1)" aria-label="Page suivante">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </nav>
+</div>
