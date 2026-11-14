@@ -1,4 +1,5 @@
 import { computed, Service, signal } from '@angular/core';
+import { MEMBRES_FICTIFS } from '../data/membres-fictifs';
 import { Abonnement, AbonnementARelancer } from '../models/abonnement.model';
 import { ParametresEntreprise } from '../models/parametres-entreprise.model';
 
@@ -15,16 +16,18 @@ export class AbonnementService {
   // Abonnements fictifs en attendant le backend
   private readonly abonnements = signal<Abonnement[]>(creerAbonnementsFictifs());
 
+  // Tous les abonnements, avec les informations calculées (jours restants, reste à payer…)
+  readonly tous = computed<AbonnementARelancer[]>(() =>
+    this.abonnements().map((a) => this.enrichir(a, this.parametres())),
+  );
+
   // Abonnements qui arrivent à échéance (dans 7 jours ou moins), le plus urgent en premier.
   // Les expirés et les restes à payer seront affichés dans la page « Abonnements ».
-  readonly echeancesProches = computed<AbonnementARelancer[]>(() => {
-    const p = this.parametres();
-
-    return this.abonnements()
-      .map((a) => this.enrichir(a, p))
+  readonly echeancesProches = computed<AbonnementARelancer[]>(() =>
+    this.tous()
       .filter((a) => a.echeance === 'bientot')
-      .sort((a, b) => a.joursRestants - b.joursRestants);
-  });
+      .sort((a, b) => a.joursRestants - b.joursRestants),
+  );
 
   // Ajoute à un abonnement toutes les informations calculées
   private enrichir(a: Abonnement, p: ParametresEntreprise): AbonnementARelancer {
@@ -75,30 +78,23 @@ function dansNJours(n: number): string {
 // ---------- Données fictives ----------
 
 function creerAbonnementsFictifs(): Abonnement[] {
-  // [nom, prénoms, formule, jours avant l'échéance, durée en jours, prix, déjà payé]
-  const fictifs: [string, string, string, number, number, number, number][] = [
-    ['Koné', 'Awa', 'Mensuel', 2, 30, 15000, 7500], // bientôt + solde en retard
-    ['Traoré', 'Ibrahim', 'Trimestriel', 5, 90, 40000, 40000], // bientôt, tout payé
-    ['Kouassi', 'Ange', 'Mensuel', 0, 30, 15000, 15000], // expire aujourd'hui
-    ['Kouassi', 'Ange', 'Mensuel', 0, 30, 15000, 15000], // expire aujourd'hui
-    ['Sanogo', 'Aïcha', 'Mensuel', 3, 30, 15000, 15000], // expire dans 3 jours
-    ['Ouattara', 'Karim', 'Mensuel', 25, 30, 15000, 7500], // vient de s'inscrire, solde à payer
-    ['Bamba', 'Fatou', 'Annuel', 200, 365, 150000, 150000], // rien à signaler
-    ['Yao', 'Marc', 'Mensuel', -6, 30, 15000, 15000], // expiré
-    ['Diallo', 'Mariam', 'Trimestriel', -2, 90, 40000, 30000], // expiré + reste à payer
-    ['Coulibaly', 'Seydou', 'Mensuel', -45, 30, 15000, 15000], // expiré depuis trop longtemps
+  // [id du membre, formule, jours avant l'échéance, durée en jours, prix, déjà payé]
+  // Les membres 10 et 11 viennent de s'inscrire : ils n'ont pas encore d'abonnement.
+  const fictifs: [number, string, number, number, number, number][] = [
+    [1, 'Mensuel', 2, 30, 15000, 7500], // bientôt + solde en retard
+    [2, 'Trimestriel', 5, 90, 40000, 40000], // bientôt, tout payé
+    [3, 'Mensuel', 0, 30, 15000, 15000], // expire aujourd'hui
+    [4, 'Mensuel', 3, 30, 15000, 15000], // expire dans 3 jours
+    [5, 'Mensuel', 25, 30, 15000, 7500], // vient de s'abonner, solde à payer
+    [6, 'Annuel', 200, 365, 150000, 150000], // rien à signaler
+    [7, 'Mensuel', -6, 30, 15000, 15000], // expiré
+    [8, 'Trimestriel', -2, 90, 40000, 30000], // expiré + reste à payer
+    [9, 'Mensuel', -45, 30, 15000, 15000], // expiré depuis longtemps
   ];
 
-  return fictifs.map(([nom, prenoms, formule, jours, duree, prix, paye], i) => ({
+  return fictifs.map(([membreId, formule, jours, duree, prix, paye], i) => ({
     id: i + 1,
-    membre: {
-      id: i + 1,
-      numero: `FM-${String(i + 1).padStart(6, '0')}`,
-      nom,
-      prenoms,
-      telephone: `22507000000${i}`,
-      salle: i % 2 === 0 ? 'Cocody' : 'Plateau',
-    },
+    membre: MEMBRES_FICTIFS.find((m) => m.id === membreId)!,
     formule,
     dateDebut: dansNJours(jours - duree),
     dateFin: dansNJours(jours),
