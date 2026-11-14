@@ -1,1 +1,114 @@
-<p>membres-page works!</p>
+<header class="entete">
+  <h1>Membres</h1>
+  <p class="resume">{{ filtres()[0].nombre }} membres inscrits</p>
+</header>
+
+<!-- Recherche + filtres -->
+<div class="outils">
+  <label class="recherche">
+    <mat-icon>search</mat-icon>
+    <input
+      type="search"
+      placeholder="Nom, téléphone ou numéro de membre"
+      [value]="recherche()"
+      (input)="surRecherche($event)"
+    />
+  </label>
+
+  <div class="filtres" role="group" aria-label="Filtrer par statut d'abonnement">
+    @for (f of filtres(); track f.valeur) {
+      <button
+        type="button"
+        class="filtre"
+        [class.filtre--actif]="filtre() === f.valeur"
+        [attr.aria-pressed]="filtre() === f.valeur"
+        (click)="filtre.set(f.valeur)"
+      >
+        {{ f.libelle }} <span class="filtre__nombre">{{ f.nombre }}</span>
+      </button>
+    }
+  </div>
+</div>
+
+<!-- Tableau des membres -->
+<div class="tableau">
+  <table>
+    <thead>
+      <tr>
+        <th>Membre</th>
+        <th class="masquable">Téléphone</th>
+        <th>Abonnement</th>
+        <th class="masquable">Paiement</th>
+        <th><span class="invisible">Ouvrir</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (l of lignesAffichees(); track l.membre.id) {
+        <tr>
+          <!-- Membre -->
+          <td>
+            <div class="membre">
+              <app-avatar [nom]="l.membre.nom + ' ' + l.membre.prenoms" [photoUrl]="l.membre.photoUrl" />
+              <div>
+                <strong>{{ l.membre.prenoms }} {{ l.membre.nom }}</strong>
+                <span class="secondaire">{{ l.membre.numero }} · {{ l.membre.salle }}</span>
+              </div>
+            </div>
+          </td>
+
+          <!-- Téléphone -->
+          <td class="masquable">{{ l.membre.telephone | telephone }}</td>
+
+          <!-- Abonnement : formule + statut -->
+          <td>
+            @if (l.abonnement; as a) {
+              <span class="formule">{{ a.formule }}</span>
+              <span class="statut" [attr.data-statut]="l.statut">
+                @switch (l.statut) {
+                  @case ('actif') { Jusqu'au {{ a.dateFin | date: 'd MMM' }} }
+                  @case ('bientot') {
+                    {{ a.joursRestants === 0 ? "Expire aujourd'hui" : 'Expire dans ' + a.joursRestants + ' j' }}
+                  }
+                  @case ('expire') { Expiré depuis {{ -a.joursRestants }} j }
+                }
+              </span>
+            } @else {
+              <span class="statut" data-statut="sans">Sans abonnement</span>
+            }
+          </td>
+
+          <!-- Paiement -->
+          <td class="masquable">
+            @if (l.abonnement; as a) {
+              <div class="paiement">
+                <div class="barre">
+                  <div
+                    class="barre__remplissage"
+                    [class.barre__remplissage--retard]="a.soldeEnRetard"
+                    [style.width.%]="a.pourcentagePaye"
+                  ></div>
+                </div>
+                <span class="secondaire" [class.retard]="a.soldeEnRetard">
+                  {{ a.resteAPayer === 0 ? 'Payé' : 'Reste ' + a.resteAPayer.toLocaleString('fr-FR') + ' F' }}
+                </span>
+              </div>
+            } @else {
+              <span class="secondaire">—</span>
+            }
+          </td>
+
+          <!-- Ouvrir la fiche (étape 11.3) -->
+          <td class="fleche">
+            <mat-icon>chevron_right</mat-icon>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="5" class="vide">
+            Aucun membre ne correspond à « {{ recherche() }} ». Vérifiez l'orthographe ou essayez le numéro de téléphone.
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

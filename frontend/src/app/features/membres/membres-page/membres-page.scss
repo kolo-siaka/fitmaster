@@ -1,0 +1,246 @@
+// ===== En-tête =====
+.entete {
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+}
+
+.resume {
+  margin: 4px 0 0;
+  color: var(--fm-gris);
+}
+
+// ===== Recherche + filtres =====
+.outils {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.recherche {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 260px;
+  max-width: 380px;
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid var(--fm-trait);
+  border-radius: 12px;
+  background: var(--fm-surface);
+  color: var(--fm-gris);
+
+  &:focus-within {
+    border-color: var(--fm-bleu);
+  }
+
+  input {
+    flex: 1;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font: inherit;
+    color: var(--fm-encre);
+  }
+}
+
+.filtres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--fm-trait);
+  border-radius: 12px;
+  background: var(--fm-surface);
+}
+
+.filtre {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--fm-gris);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--fm-encre);
+  }
+}
+
+.filtre--actif,
+.filtre--actif:hover {
+  background: var(--fm-degrade);
+  color: #fff;
+
+  .filtre__nombre {
+    background: rgb(255 255 255 / 0.25);
+    color: #fff;
+  }
+}
+
+.filtre__nombre {
+  min-width: 18px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--fm-fond);
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+// ===== Tableau =====
+.tableau {
+  border: 1px solid var(--fm-trait);
+  border-radius: var(--fm-rayon);
+  background: var(--fm-surface);
+  overflow-x: auto; // sur petit écran, le tableau défile horizontalement
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--fm-trait);
+  color: var(--fm-gris);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+
+td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--fm-trait);
+  vertical-align: middle;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+tbody tr:hover td {
+  background: #f8fafc; // la ligne survolée s'éclaircit
+}
+
+.membre {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.secondaire {
+  color: var(--fm-gris);
+  font-size: 0.82rem;
+}
+
+.formule {
+  display: block;
+  font-weight: 600;
+}
+
+// Pastille de statut : la couleur dépend de l'attribut data-statut
+.statut {
+  display: inline-block;
+  margin-top: 2px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+
+  &[data-statut='actif'] {
+    background: #e3f5ee;
+    color: var(--fm-vert);
+  }
+
+  &[data-statut='bientot'] {
+    background: #fdf1e1;
+    color: var(--fm-alerte);
+  }
+
+  &[data-statut='expire'] {
+    background: #fbe7e5;
+    color: var(--fm-danger);
+  }
+
+  &[data-statut='sans'] {
+    background: var(--fm-fond);
+    color: var(--fm-gris);
+  }
+}
+
+.paiement {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 120px;
+}
+
+.barre {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--fm-trait);
+  overflow: hidden;
+}
+
+.barre__remplissage {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--fm-degrade);
+}
+
+.barre__remplissage--retard {
+  background: var(--fm-danger);
+}
+
+.retard {
+  color: var(--fm-danger);
+  font-weight: 600;
+}
+
+.fleche {
+  width: 40px;
+  color: var(--fm-gris);
+  text-align: right;
+}
+
+.invisible {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0); // caché à l'écran mais lu par les lecteurs d'écran
+}
+
+.vide {
+  padding: 40px;
+  color: var(--fm-gris);
+  text-align: center;
+}
+
+// Sur petit écran, on cache le téléphone et le paiement
+@media (max-width: 800px) {
+  .masquable {
+    display: none;
+  }
+}
